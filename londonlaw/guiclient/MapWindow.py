@@ -28,6 +28,7 @@ import os, gettext, wx
 from .TextPanel import *
 from .graphicalmap import *
 from common.config import *
+from twisted.python import log
 
 
 PlayerNumError = "Player Number Error"
@@ -173,14 +174,14 @@ class MapWindow(wx.ScrolledWindow):
       mapPixel     = locToPixel(loc, self.zoomLevel)
       stepX, stepY = self.GetScrollPixelsPerUnit()
       sX, sY       = self.GetViewStart()
-      self.labels[playerNum].Move(mapPixel[0] - 20 - sX*stepX, mapPixel[1] - 10 - sY*stepY)
+      self.labels[playerNum].Move(int(mapPixel[0] - 20 - sX*stepX), int(mapPixel[1] - 10 - sY*stepY))
 
 
    # remove a pushpin from the map bitmap
    def unDrawPushpin(self, playerNum):
       mapPixel = locToPixel(self.playerLoc[playerNum], self.zoomLevel)
       self.pushpinDC.SelectObject(self.pushpinBackgrounds[playerNum])
-      self.bmpDC.Blit(mapPixel[0]-self.pushpinOffset[0], mapPixel[1]-self.pushpinOffset[1], 
+      self.bmpDC.Blit(int(mapPixel[0]-self.pushpinOffset[0]), int(mapPixel[1]-self.pushpinOffset[1]), 
             self.pushpinBackgrounds[playerNum].GetWidth(),
             self.pushpinBackgrounds[playerNum].GetHeight(), self.pushpinDC, 0, 0)
 
@@ -189,16 +190,17 @@ class MapWindow(wx.ScrolledWindow):
    def updatePushpinBackground(self, playerNum):
       mapPixel = locToPixel(self.playerLoc[playerNum], self.zoomLevel)
       self.pushpinDC.SelectObject(self.pushpinBackgrounds[playerNum])
+      print(self.pushpinOffset)
       self.pushpinDC.Blit(0, 0, self.pushpinBackgrounds[playerNum].GetWidth(),
             self.pushpinBackgrounds[playerNum].GetHeight(), 
-            self.bmpDC, mapPixel[0]-self.pushpinOffset[0], mapPixel[1]-self.pushpinOffset[1])
+            self.bmpDC, int(mapPixel[0]-self.pushpinOffset[0]), int(mapPixel[1]-self.pushpinOffset[1]))
 
 
    # blit a pushpin image to the map bitmap
    def drawPushpin(self, playerNum):
       mapPixel = locToPixel(self.playerLoc[playerNum], self.zoomLevel)
       self.pushpinDC.SelectObject(self.pushpins[playerNum])
-      self.bmpDC.Blit(mapPixel[0]-self.pushpinOffset[0], mapPixel[1]-self.pushpinOffset[1], 
+      self.bmpDC.Blit(int(mapPixel[0]-self.pushpinOffset[0]), int(mapPixel[1]-self.pushpinOffset[1]), 
             self.pushpinBackgrounds[playerNum].GetWidth(),
             self.pushpinBackgrounds[playerNum].GetHeight(), self.pushpinDC, 0, 0, wx.COPY, True)
 

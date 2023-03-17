@@ -63,6 +63,7 @@ class ScrolledLabel(wx.ScrolledWindow):
    # scroll to the bottom of the text
    def ScrollToEnd(self):
       self.topSizer.FitInside(self)
-      self.Scroll(0, self.GetVirtualSize()[1]/5)
+ #     self.Scroll(0, self.GetVirtualSize()[1]/5)
+      self.Scroll(0, 20)
 
 

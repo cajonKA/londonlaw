@@ -13,7 +13,7 @@ This repository is based on a copy of the [last known pre-release](http://www.fr
 by the original author Paul Pelzl and contains additional patches to make this
 game work with modern software.
 
-Please note: I will not invest much time into development but patches are welcome.
+I forked this repo to adapt it to current python and lib versions.
 
 Screenshot:
 -----------
@@ -27,12 +27,15 @@ Dependencies:
 * [wxPython](http://www.wxpython.org/)
 
 The code has been tested with the following versions:
-* Python 3.8.5
-* Twisted-18.9.0
-* wxPython-4.0.7
+* Python 3.10.9
+* Twisted-22.10.0
+* wxPython-4.2.0
 
 get started:
 ------------
+
+Setup is not working, run the server and client manually with the commands below
+
 
 <h3>For Ubuntu</h3>
 <code>sudo apt install python3-wxgtk4.0</code> (only for the client)<br>
@@ -45,10 +48,14 @@ get started:
   python3 londonlaw/london-client.py [ip-adress] [player] [password] [gamename]<br>
   (The parameters are optional.)
 
+* Run AI Player:<br>
+  python3 londonlaw/aiclients/detective_simple_launcher.py [AiName] [GameNameToJoin]
+
+
 <h3>For Windows</h3>
 Check, if you have Python3 installed:<br>
 <code>python --version</code><br>
-Python 3.8.5
+Python 3.10.9
 <br><br>
 Install the libraries, you need administration rights:<br>
 <code>pip install wxpython</code> (only for the client)<br>
@@ -64,6 +71,10 @@ Install the libraries, you need administration rights:<br>
 
 Changes
 -------
+
+1.01.0
+   * applied fixes to make it run with current python and lib versions
+
 
 0.303:
    * ported to python3 by Horst Aldebaran alias Meyer (horald)

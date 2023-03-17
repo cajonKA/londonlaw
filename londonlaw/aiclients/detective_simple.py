@@ -32,7 +32,6 @@ class DetectiveSimpleAIProtocolError(Exception):
 class DetectiveSimpleAIProtocol(base.BaseAIProtocol):
 
    def doTurn(self, pawnName):
-
       pawn = self._pawns[pawnName]
 
       def cost(ticket_amounts, ticket):
@@ -57,17 +56,17 @@ class DetectiveSimpleAIProtocol(base.BaseAIProtocol):
       all_paths = path.cheapest_path(pawn.getLocation(), tickets=pawn._tickets,
                                       cost=cost)
       detective_locs = [self._pawns[p].getLocation() for p in self._pawns if p != 'X']
-
       if self._turnNum < 3:
          # Before X has surfaced, just try to get to high-mobility locations.
          # Compute locations we can get to by the end of turn 2, with the constraint
          # that we don't spend any undergrounds
          t = pawn._tickets.copy()
          t['underground'] = 0
-         e = [sets.Set()] * (3 - self._turnNum)
-         e[0].union_update(detective_locs)
+         e = [set()] * (3 - self._turnNum)
+         e[0].update(detective_locs)
          locs = list(path.possible_destinations(pawn.getLocation(), 3 - self._turnNum, 
                tickets=t, eliminate=e))
+         print("LOCS "+str(locs))
          random.shuffle(locs)
          # evaluate the mobility of each location
          bestLoc      = None
@@ -95,7 +94,7 @@ class DetectiveSimpleAIProtocol(base.BaseAIProtocol):
             for p in self._pawns:
                if p != 'X' and p in self._history[i-1].keys():
                   detPos.append(self._history[i-1][p][0])
-            e.append(sets.Set(detPos))
+            e.append(set(detPos))
          log.msg('x transports = ' + str(xTransports))
          xLocs = path.possible_locations(lastXLoc, xTransports, eliminate=e)
          log.msg('x possible locations = ' + str(xLocs))
@@ -115,7 +114,7 @@ class DetectiveSimpleAIProtocol(base.BaseAIProtocol):
             # if we can't find anything good, make a random move
             log.msg("moving randomly")
             availableMoves = list(path.possible_destinations(pawn.getLocation(), 1,
-               tickets=pawn._tickets, eliminate = [sets.Set(detective_locs)]))
+               tickets=pawn._tickets, eliminate = [set(detective_locs)]))
             move = random.choice(availableMoves)
             self.makeMove([pawnName.lower(), str(all_paths[move][0][0]), all_paths[move][0][1]])
 

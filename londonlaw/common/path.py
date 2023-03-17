@@ -106,7 +106,7 @@ def _compute_path(source, dest, previous):
 #       manner... but it seems plenty fast for N=200.
 def cheapest_path(source, dest=None, tickets=unlimited_tickets, cost=equal_cost):
    # U is unvisited vertices
-   U = sets.Set()
+   U = set()
    for u in range(1, len(map.locToRoutes)):
       U.add(u)
    path_cost         = [1e100] * len(map.locToRoutes)
@@ -133,7 +133,7 @@ def cheapest_path(source, dest=None, tickets=unlimited_tickets, cost=equal_cost)
                      t[v][transport] -= 1
                   path_cost[v] = path_cost[min_u] + cost(t[min_u], transport)
                   previous[v] = (min_u, transport)
-
+   print()
    if dest == None:
       return ([None] + 
       [_compute_path(source, d, previous) for d in range(1, len(map.locToRoutes))])
@@ -164,8 +164,8 @@ def cheapest_path(source, dest=None, tickets=unlimited_tickets, cost=equal_cost)
 #
 def shortest_path(source, dest=None, tickets=unlimited_tickets, cost=equal_cost):
    # V is visited nodes, U is unvisited
-   V = sets.Set([source])
-   U = sets.Set()
+   V = set([source])
+   U = set()
    for i in range(1, len(map.locToRoutes)):
       U.add(i)
    U.remove(source)
@@ -176,7 +176,7 @@ def shortest_path(source, dest=None, tickets=unlimited_tickets, cost=equal_cost)
 
    search_vertices = V.copy()
    while (dest == None or dest in U) and len(search_vertices) > 0:
-      next_search_vertices = sets.Set()
+      next_search_vertices = set()
       for visited in search_vertices:
          for d, transports in map.locToRoutes[visited]:
             if d not in V:
@@ -198,7 +198,7 @@ def shortest_path(source, dest=None, tickets=unlimited_tickets, cost=equal_cost)
                         previous[d] = (visited, transport, 
                               cost(t[visited], transport) + old_cost)
                         next_search_vertices.add(d)
-      V.union_update(next_search_vertices)
+      V.update(next_search_vertices)
       U.difference_update(next_search_vertices)
       search_vertices = next_search_vertices
 
@@ -249,17 +249,15 @@ def distance(source, dest=None, pathfinder=shortest_path,
 def possible_destinations(source, turns, tickets=unlimited_tickets, eliminate=None,
       force_move=True):
    if eliminate == None:
-      eliminate = [sets.Set()] * turns
-
+      eliminate = [set()] * turns
    # have to convert 'tickets' to a tuple, because otherwise we can't
    # store it in a Set ("dict objects are unhashable")
    tickets_assoc = ()
    for key in tickets:
       tickets_assoc = tickets_assoc + ((key, tickets[key]),)
-
-   loc_sets  = [sets.Set([(source, tickets_assoc)])]
+   loc_sets  = [set([(source, tickets_assoc)])]
    for turn in range(turns):
-      loc_sets.append(sets.Set())
+      loc_sets.append(set())
       for loc, t in loc_sets[turn]:
          is_stuck = 1
          for dest, transports in map.locToRoutes[loc]:
@@ -280,7 +278,7 @@ def possible_destinations(source, turns, tickets=unlimited_tickets, eliminate=No
             # the next turn
             loc_sets[turn + 1].add((loc, t))
 
-   ret_val = sets.Set()
+   ret_val = set()
    for loc, t in loc_sets[turns]:
       ret_val.add(loc)
    return ret_val
@@ -298,11 +296,11 @@ def possible_destinations(source, turns, tickets=unlimited_tickets, eliminate=No
 # rule out Mr. X capture scenarios.
 def possible_locations(source, tickets_spent, eliminate=None):
    if eliminate == None:
-      eliminate = [sets.Set()] * len(tickets_spent)
+      eliminate = [set()] * len(tickets_spent)
 
-   loc_sets = [sets.Set([source])]
+   loc_sets = [set([source])]
    for turn in range(len(tickets_spent)):
-      loc_sets.append(sets.Set())
+      loc_sets.append(set())
       for loc in loc_sets[turn]:
          for dest, transports in map.locToRoutes[loc]:
             if tickets_spent[turn] in transports and dest not in eliminate[turn]:

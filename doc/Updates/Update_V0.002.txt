@@ -1,7 +1,0 @@
-Update
-Date: 2021-01-21
-Version: 0.002
-=============================
-- change source with 2to3 (only guiclient)
-
-

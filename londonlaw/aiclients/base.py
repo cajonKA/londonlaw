@@ -43,13 +43,13 @@ class BaseAIProtocol(basic.LineOnlyReceiver):
       self._turnNum            = 0
       self._lastMover          = None
       self._lastXSurfacingTurn = None
-      self._players            = sets.Set()
+      self._players            = set()
       self._gameStatus         = None
 
 
    def connectionLost(self, reason):
       #reactor.stop()
-      print "AI: connection lost"
+      print ("AI: connection lost")
 
 
    def connectionMade(self):
@@ -79,7 +79,7 @@ class BaseAIProtocol(basic.LineOnlyReceiver):
        
       dets      = ['Red', 'Yellow', 'Green', 'Blue', 'Black']
       detLocs   = [self._pawns[d].getLocation() for d in dets]
-      allMoves  = path.possible_destinations(loc, 1, eliminate=[sets.Set(detLocs)])
+      allMoves  = path.possible_destinations(loc, 1, eliminate=[set(detLocs)])
       distances = [path.distance(self._pawns[d].getLocation(),
             tickets=self._pawns[d]._tickets) for d in dets]
 
@@ -125,10 +125,10 @@ class BaseAIProtocol(basic.LineOnlyReceiver):
          else:
             log.msg("Received unhandled server message (too few args): \"" + line + "\" state = \"" + self._state + "\"")
 
-      except AttributeError, e:
-         log.msg(str(e))
-         log.msg("tokens = " + str(tokens))
-         log.msg("Received unhandled server message: \"" + line + "\" state = \"" + self._state + "\"")
+      except AttributeError:
+         log.msg(str(AttributeError))
+         #log.msg("tokens = " + str(tokens))
+         log.msg("Received unhandled server message: \"" + str(line) + "\" state = \"" + self._state + "\"")
 
 
    def makeMove(self, data):
@@ -222,10 +222,10 @@ class BaseAIProtocol(basic.LineOnlyReceiver):
    def response_ok_trylistgames(self, tag, args):
       if self._gameStatus == GAMESTATUS_NEW:
          self._state = "tryjoin"
-         self.sendTokens(self.genTag(), "join", self._gameroom.encode("utf-8"))
+         self.sendTokens(self.genTag(), "join", self._gameroom)
       elif self._gameStatus == GAMESTATUS_INPROGRESS:
          self._state = "tryrejoin"
-         self.sendTokens(self.genTag(), "join", self._gameroom.encode("utf-8"))
+         self.sendTokens(self.genTag(), "join", self._gameroom)
       elif self._gameStatus == None:
          log.msg("Specified game not found; exiting.")
          self.transport.loseConnection()
@@ -346,8 +346,10 @@ class BaseAIProtocol(basic.LineOnlyReceiver):
 
 
    def sendTokens(self, *tokens):
+
       s = util.join_tokens(*tokens)
-      self.sendLine(str(s))
+      print(str(s))
+      self.sendLine(s.encode("utf-8"))
 
 
 

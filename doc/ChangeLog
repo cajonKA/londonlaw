@@ -1,5 +1,8 @@
 London Law ChangeLog
 --------------------------------------------------------------------------------
+1.01.0
+   2023-03-17        applied fixes to make it run with current python and lib versions
+
 1.00.1
    2021-02-17        Correction to play the game with python3
 

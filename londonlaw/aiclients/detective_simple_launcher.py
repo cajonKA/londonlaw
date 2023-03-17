@@ -46,7 +46,7 @@ else:
 log.msg("Using server at localhost port " + str(port))
 log.msg("Sending simple AI client \"" + sys.argv[1] + "\" to game room \"" + sys.argv[2] + "\"")
 
-f = detective_simple.DetectiveSimpleAIFactory(sys.argv[1].decode("utf-8"), sys.argv[2].decode("utf-8"))
+f = detective_simple.DetectiveSimpleAIFactory(sys.argv[1], sys.argv[2])
 reactor.connectTCP("localhost", port, f)
 reactor.run()
 
